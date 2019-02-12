@@ -1,0 +1,28 @@
+version: '2'
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - .:/code
+      - "$PWD/docker/nginx/conf.d/site.conf:/etc/nginx/conf.d/site.conf"
+    links:
+      - web
+
+  web:
+    build:
+      context: ./docker
+    volumes:
+      - .:/code
+    links:
+      - postgres
+
+  postgres:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: user_write
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    
